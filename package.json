@@ -1,0 +1,36 @@
+{
+  "name": "udps",
+  "version": "1.0.0",
+  "description": "a secure application protocol build on udp",
+  "main": "index.js",
+  "scripts": {
+    "build": "rm -rf dist && mkdir -p dist && babel src --out-dir dist",
+    "test": "standard"
+  },
+  "author": "Christoph Witzko <npm@christophwitzko.com> (http://christophwitzko.com/)",
+  "license": "MIT",
+  "devDependencies": {
+    "babel": "^5.6.14",
+    "standard": "^4.3.3"
+  },
+  "dependencies": {
+    "async": "^1.3.0",
+    "crc": "^3.3.0",
+    "lodash": "^3.9.3",
+    "protobufjs": "^4.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/christophwitzko/udps.git"
+  },
+  "keywords": [
+    "udps",
+    "dgram",
+    "udp",
+    "ECDH"
+  ],
+  "bugs": {
+    "url": "https://github.com/christophwitzko/udps/issues"
+  },
+  "homepage": "https://github.com/christophwitzko/udps#readme"
+}
