@@ -6,7 +6,8 @@ import Packet from './Packet'
 export default class Connection extends EventEmitter {
   constructor (ps, address, port) {
     super()
-    this.stream = null
+    this._streamid = null
+    this._sequence = 0
     this._ps = ps
     this.address = address
     this.port = port
@@ -18,6 +19,9 @@ export default class Connection extends EventEmitter {
     this._auth.secret = null
     this._auth.retryTimer = null
   }
+  getStreamId () {
+    return this._streamid && this._streamid.toString('hex')
+  }
   initECDH () {
     this._auth.ecdh = crypto.createECDH(this._auth.curve)
     this._auth.ecdh.generateKeys()
@@ -28,7 +32,7 @@ export default class Connection extends EventEmitter {
     )
   }
   initiate () {
-    this.stream = crypto.randomBytes(8)
+    this._streamid = crypto.randomBytes(8)
     this._send(this.initECDH())
     this._auth.retryTimer = setTimeout(this.initiate.bind(this), 1000)
   }
@@ -41,7 +45,7 @@ export default class Connection extends EventEmitter {
     return crypto.createHmac('sha256', this._secret).update(str).digest()
   }
   startTo (pkt) {
-    this.stream = pkt.getStream()
+    this._streamid = pkt.getStream()
     const authentication = pkt.getAuthentication()
     this._auth.curve = authentication.curve
     this._auth.cipher = authentication.cipher
@@ -91,7 +95,7 @@ export default class Connection extends EventEmitter {
   }
   _send (pkt, cb) {
     if (this.ready) this._encryptPkt(pkt)
-    pkt.setStream(this.stream)
+    pkt.setStream(this._streamid)
     this._ps.send(this.address, this.port, pkt, cb)
   }
   syncTo (pkt) {
@@ -114,11 +118,12 @@ export default class Connection extends EventEmitter {
     if (!this.ready) return
     this._decryptPkt(pkt)
     // const type = pkt.getType()
+    // this.emit('_packet')
   }
   close (cb) {
     if (!this.ready) return
     this._send(Packet.createFinalize(), () => {
-      this.emit.bind(this, 'close')
+      this.emit('close')
       if (typeof cb === 'function') cb()
     })
   }
