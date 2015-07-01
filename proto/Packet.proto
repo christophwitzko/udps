@@ -1,0 +1,26 @@
+message Packet {
+  enum Protocol {
+    RAW = 1;
+    ENCRYPTED = 2;
+  }
+  enum Type {
+    AUTHENTICATION = 1;
+    SYNCHRONIZATION = 2;
+    REQUEST = 3;
+    RESPONSE = 4;
+    FINALIZE = 5;
+  }
+  message Authentication {
+    required string curve = 1;
+    required string cipher = 3;
+  }
+  required Protocol protocol = 1 [default = RAW];
+  required Type type = 2;
+  required bytes stream = 3;
+  required int64 sequence = 4 [default = 0];
+  optional Authentication authentication = 5;
+  optional bytes crc = 6;
+  optional bytes authtag = 7;
+  optional bytes iv = 8;
+  optional bytes data = 9;
+}
