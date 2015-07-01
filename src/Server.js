@@ -44,7 +44,7 @@ export default class Server extends EventEmitter {
         con.syncTo(pkt)
       }
       if (con && type > 2 && type < 5) {
-        con.handlePacket(pkt, rinfo)
+        con.handlePacket(pkt)
       }
       if (con && type === 5) {
         con.emit('close')
