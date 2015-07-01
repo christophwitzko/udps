@@ -2,6 +2,7 @@ import { EventEmitter } from 'events'
 import crypto from 'crypto'
 
 import Packet from './Packet'
+import ConnectionStream from './ConnectionStream'
 
 export default class Connection extends EventEmitter {
   constructor (ps, address, port) {
@@ -18,6 +19,7 @@ export default class Connection extends EventEmitter {
     this._auth.ecdh = null
     this._auth.secret = null
     this._auth.retryTimer = null
+    this.stream = new ConnectionStream(this)
   }
   getStreamId () {
     return this._streamid && this._streamid.toString('hex')
