@@ -20,7 +20,7 @@ export default class Client extends EventEmitter {
     })
     this._ps.on('packet', (pkt, rinfo) => {
       const type = pkt.getType()
-      const h1 = this._address + this._port + this._connection.stream.toString('hex')
+      const h1 = this._address + this._port + this._connection.getStreamId()
       const h2 = rinfo.address + rinfo.port + pkt.getStreamString()
       if (h1 !== h2) return
       if (type === 1) {
@@ -30,7 +30,7 @@ export default class Client extends EventEmitter {
         this._connection.syncFrom(pkt)
       }
       if (type > 2 && type < 5) {
-        this._connection.handlePacket(pkt, rinfo)
+        this._connection.handlePacket(pkt)
       }
       if (type === 5) {
         this._connection.emit('close')
