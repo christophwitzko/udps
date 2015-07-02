@@ -6,8 +6,8 @@ message Packet {
   enum Type {
     AUTHENTICATION = 1;
     SYNCHRONIZATION = 2;
-    REQUEST = 3;
-    RESPONSE = 4;
+    DATA = 3;
+    ACKNOWLEDGMENT = 4;
     FINALIZE = 5;
   }
   message Authentication {

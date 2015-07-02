@@ -109,15 +109,15 @@ export default class Packet {
     pkt._p.setType(ProtoPacket.Type.SYNCHRONIZATION)
     return pkt
   }
-  static createRequest (seq, data) {
+  static createData (seq, data) {
     const pkt = new Packet(data)
-    pkt._p.setType(ProtoPacket.Type.REQUEST)
+    pkt._p.setType(ProtoPacket.Type.DATA)
     pkt.setSequence(seq)
     return pkt
   }
-  static createResponse (seq, data) {
-    const pkt = new Packet(data)
-    pkt._p.setType(ProtoPacket.Type.RESPONSE)
+  static createAcknowledgment (seq) {
+    const pkt = new Packet()
+    pkt._p.setType(ProtoPacket.Type.ACKNOWLEDGMENT)
     pkt.setSequence(seq)
     return pkt
   }
