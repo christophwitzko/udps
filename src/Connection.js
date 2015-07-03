@@ -121,8 +121,7 @@ export default class Connection extends EventEmitter {
   handlePacket (pkt, rinfo) {
     if (!this.ready) return
     this._decryptPkt(pkt)
-    // const type = pkt.getType()
-    // this.emit('_packet')
+    this.stream._packet(pkt)
   }
   close (cb) {
     if (!this.ready) return
