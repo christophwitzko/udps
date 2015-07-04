@@ -91,6 +91,7 @@ export default class ConnectionStream extends Duplex {
         }
         return
       }
+      if (this._rc.buffers.length > this._con._windowSize) return
       this._rc.buffers.push({
         seq: seq,
         data: pkt.getData()
