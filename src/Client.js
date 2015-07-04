@@ -16,6 +16,7 @@ export default class Client extends EventEmitter {
     this._connection = new Connection(this._ps, this._address, this._port)
     this._connection.on('ready', this.emit.bind(this, 'ready'))
     this._connection.on('close', () => {
+      this._connection.stream.end()
       this._ps.close()
     })
     this._ps.on('packet', (pkt, rinfo) => {
