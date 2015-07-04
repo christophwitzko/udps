@@ -60,11 +60,11 @@ export default class ConnectionStream extends Duplex {
     this._wc.buffers = buffers
     this._wc.callback = cb
     this._wc.timers = {}
-    async.eachSeries(buffers, (b, callback) => {
+    buffers.reverse().forEach((b) => {
       const pkt = Packet.createData(b.seq, b.data)
       const sender = this._con._send.bind(this._con, pkt)
-      sender(callback)
       this._wc.timers[b.seq] = setInterval(sender, 1000)
+      sender()
     })
   }
   _ack (seq) {
@@ -74,7 +74,7 @@ export default class ConnectionStream extends Duplex {
     const type = pkt.getType()
     const seq = pkt.getSequence()
     if (type === 3) {
-      if (this._readableState.length >= this.maxSize) return
+      if (this._readableState.length >= this.maxSize * this.maxSize) return
       if (seq < this._rc.seq) return
       if (seq === this._rc.seq) {
         this.push(pkt.getData())
@@ -90,7 +90,7 @@ export default class ConnectionStream extends Duplex {
         this._ack(this._rc.seq - 1)
         return
       }
-      if (this._rc.buffers.length > this._con._windowSize) return
+      if (this._rc.buffers.length >= this._con._windowSize) return
       this._rc.buffers.push({
         seq: seq,
         data: pkt.getData()

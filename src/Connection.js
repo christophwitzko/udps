@@ -10,8 +10,8 @@ export default class Connection extends EventEmitter {
     this._streamid = null
     this._sequence = 0
     this._ps = ps
-    this._windowSize = 4
-    this._packetSize = 256
+    this._windowSize = 32
+    this._packetSize = 450
     this.address = address
     this.port = port
     this.ready = false
