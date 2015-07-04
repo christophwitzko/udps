@@ -22,26 +22,25 @@ export default class ConnectionStream extends Duplex {
       buffers: []
     }
     this.maxSize = con._windowSize * con._packetSize
-    this.wbl = new BufferList()
-    this._con.on('_packet', this._packet.bind(this))
+    this._wbl = new BufferList()
   }
   _read (size) {
   }
   _write (chunk, encoding, callback) {
-    this.wbl.append(chunk)
+    this._wbl.append(chunk)
     async.whilst(
-      () => this.wbl.length >= this.maxSize,
+      () => this._wbl.length >= this.maxSize,
       (cb) => {
-        const win = this.wbl.slice(0, this.maxSize)
+        const win = this._wbl.slice(0, this.maxSize)
         this._sendWindow(win, () => {
-          this.wbl.consume(win.length)
+          this._wbl.consume(win.length)
           cb()
         })
       },
       () => {
-        if (this.wbl.length) {
-          this._sendWindow(this.wbl.slice(0, this.wbl.length), () => {
-            this.wbl.consume(this.wbl.length)
+        if (this._wbl.length) {
+          this._sendWindow(this._wbl.slice(0, this._wbl.length), () => {
+            this._wbl.consume(this._wbl.length)
             callback()
           })
           return
