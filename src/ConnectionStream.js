@@ -3,7 +3,7 @@ import { Duplex } from 'stream'
 import async from 'async'
 import BufferList from 'bl'
 import bsplit from 'split-buffer'
-import { find } from 'lodash'
+import { filter } from 'lodash'
 
 import Packet from './Packet'
 
@@ -12,7 +12,6 @@ export default class ConnectionStream extends Duplex {
     super()
     this._con = con
     this._wc = {
-      index: 0,
       buffers: [],
       callback: null,
       timers: {}
@@ -25,6 +24,7 @@ export default class ConnectionStream extends Duplex {
     this._wbl = new BufferList()
   }
   _read (size) {
+
   }
   _write (chunk, encoding, callback) {
     this._wbl.append(chunk)
@@ -79,16 +79,15 @@ export default class ConnectionStream extends Duplex {
       if (seq === this._rc.seq) {
         this.push(pkt.getData())
         this._rc.seq++
-        this._ack(seq)
-        if (!this._rc.buffers.length) return
+        if (!this._rc.buffers.length) return this._ack(seq)
         let next = this._rc.buffers[0]
         while (next && next.seq === this._rc.seq) {
           this.push(next.data)
           this._rc.seq++
-          this._ack(next.seq)
           this._rc.buffers.shift()
           next = this._rc.buffers[0]
         }
+        this._ack(this._rc.seq - 1)
         return
       }
       if (this._rc.buffers.length > this._con._windowSize) return
@@ -100,12 +99,14 @@ export default class ConnectionStream extends Duplex {
       return
     }
     if (type === 4) {
-      const be = find(this._wc.buffers, 'seq', seq)
-      if (!be) return
-      clearInterval(this._wc.timers[be.seq])
-      be.ack = true
-      if (!find(this._wc.buffers, 'ack', false)) {
-        this._wc.index++
+      const nack = filter(this._wc.buffers, 'ack', false)
+      const cack = filter(nack, (v) => v.seq <= seq)
+      if (cack.length === 0) return
+      cack.forEach((v) => {
+        clearInterval(this._wc.timers[v.seq])
+        v.ack = true
+      })
+      if (!(nack.length - cack.length)) {
         this._wc.callback()
       }
     }
