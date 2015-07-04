@@ -37,6 +37,7 @@ export default class Server extends EventEmitter {
         this._connections[hash].startTo(pkt)
         this._connections[hash].on('ready', this.emit.bind(this, 'connection'))
         this._connections[hash].on('close', () => {
+          this._connections[hash].stream.end()
           delete this._connections[hash]
         })
       }
