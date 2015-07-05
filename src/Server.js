@@ -21,12 +21,8 @@ export default class Server extends EventEmitter {
       const con = this._connections[hash]
 
       // drop invalid packets
-      if (pkt.error) return
+      if (pkt.error || stream === '00') return
 
-      if (stream === '00') {
-        // TODO
-        return
-      }
       if (type === 1) {
         if (keys(this._connections).length >= this._maxConnections) return
         this._connections[hash] = new Connection(
