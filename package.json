@@ -1,16 +1,17 @@
 {
   "name": "udps",
-  "version": "1.0.0",
   "description": "a secure application protocol build on udp",
   "main": "index.js",
   "scripts": {
     "build": "rm -rf dist && mkdir -p dist && babel src --out-dir dist",
-    "test": "standard"
+    "test": "standard",
+    "semantic-release": "npm run build && semantic-release pre && npm publish && semantic-release post"
   },
   "author": "Christoph Witzko <npm@christophwitzko.com> (http://christophwitzko.com/)",
   "license": "MIT",
   "devDependencies": {
     "babel": "^5.6.14",
+    "semantic-release": "^3.4.1",
     "standard": "^4.3.3"
   },
   "dependencies": {
