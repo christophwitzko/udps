@@ -48,7 +48,7 @@ export default class Server extends EventEmitter {
       }
     })
   }
-  close (cb) {
+  close () {
     async.each(values(this._connections), (con, cb) => {
       con.close(cb)
     }, () => {

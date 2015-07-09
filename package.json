@@ -2,6 +2,7 @@
   "name": "udps",
   "description": "a secure application protocol build on udp",
   "main": "index.js",
+  "bin": "bin/udps.js",
   "scripts": {
     "build": "rm -rf dist && mkdir -p dist && babel src --out-dir dist",
     "test": "standard",
@@ -19,6 +20,7 @@
     "bl": "^1.0.0",
     "crc": "^3.3.0",
     "lodash": "^3.9.3",
+    "minimist": "^1.1.1",
     "protobufjs": "^4.0.0",
     "split-buffer": "^1.0.0"
   },
