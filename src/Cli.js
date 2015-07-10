@@ -1,12 +1,29 @@
 import minimist from 'minimist'
 import UDPS from './'
 
+const help = `  udps - a secure application protocol build on udp
+
+  Usage:
+      udps <options> [server]
+  Options:
+      -s, --server <port> Starts a server on the given port
+      -h, --help          Output this help info
+  Examples:
+      udps -s 1337
+      udps 127.0.0.1 1337
+`
+
 export default function (argv) {
   const args = minimist(argv, {
     alias: {
+      help: 'h',
       server: 's'
     }
   })
+  if (args.help) {
+    console.log(help)
+    return
+  }
   if (args.server) {
     if (typeof args.server !== 'number') return console.error('invalid port')
     const server = new UDPS.Server(args.server)
