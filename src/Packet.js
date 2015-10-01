@@ -4,7 +4,7 @@ import ProtoBuf from 'protobufjs'
 import crc from 'crc'
 import { invert, padLeft } from 'lodash'
 
-const builder = ProtoBuf.loadProtoFile(join(__dirname, '../proto/packet.proto'))
+const builder = ProtoBuf.loadProtoFile(join(__dirname, '../proto/Packet.proto'))
 const ProtoPacket = builder.build('Packet')
 
 function calcCrc32 (data) {
