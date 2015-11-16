@@ -21,7 +21,7 @@
     "crc": "^3.3.0",
     "lodash": "^3.9.3",
     "minimist": "^1.1.1",
-    "protobufjs": "^4.0.0",
+    "protobufjs": "^5.0.0",
     "split-buffer": "^1.0.0"
   },
   "repository": {
